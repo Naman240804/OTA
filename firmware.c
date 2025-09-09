@@ -20,7 +20,7 @@
 
 #define WIFI_SSID      "Airtel_yath_0430" // Your Wi-Fi SSID
 #define WIFI_PASS  "Kirti@766"        // Your Wi-Fi password
-#define VERSION_JSON_URL "http://192.168.1.14:8070/firmware.json"
+#define VERSION_JSON_URL "http://github.com/Naman240804/OTA/blob/d13a818c2afc622e587352c237ba22db9ab6db30/firmware.json"
 #define CURRENT_VERSION 1
 
 static const char *TAG = "OTA_JSON";
