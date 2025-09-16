@@ -14,13 +14,16 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "esp_crt_bundle.h"
+
 
 #define BLINK_GPIO 2
 #define BLINK_DELAY_MS 1000
 
-#define WIFI_SSID      "Airtel_yath_0430" // Your Wi-Fi SSID
-#define WIFI_PASS  "Kirti@766"        // Your Wi-Fi password
-#define VERSION_JSON_URL "http://github.com/Naman240804/OTA/blob/d13a818c2afc622e587352c237ba22db9ab6db30/firmware.json"
+#define WIFI_SSID      "SMJV" // Your Wi-Fi SSID
+#define WIFI_PASS  "Smjv090325"        // Your Wi-Fi password
+#define VERSION_JSON_URL "https://raw.githubusercontent.com/Naman240804/OTA/main/firmware.json"
+
 #define CURRENT_VERSION 1
 
 static const char *TAG = "OTA_JSON";
@@ -65,10 +68,14 @@ static void wifi_init(void)
 static int check_version(void)
 {
     esp_http_client_config_t client_config = {
-        .url = VERSION_JSON_URL,
-        .timeout_ms = 5000,
-        .method = HTTP_METHOD_GET,
+    .url = VERSION_JSON_URL,
+    .timeout_ms = 5000,
+    .method = HTTP_METHOD_GET,
+    .crt_bundle_attach = esp_crt_bundle_attach,                      // skip server verification
     };
+
+
+
 
     esp_http_client_handle_t client = esp_http_client_init(&client_config);
     if (!client) {
@@ -162,7 +169,11 @@ void ota_update_task(void *pvParameter)
 
     ESP_LOGI(TAG, "Starting OTA update task...");
 
-    esp_http_client_config_t config = { .url = firmware_url };
+    esp_http_client_config_t config = {
+    .url = firmware_url,
+    .crt_bundle_attach = esp_crt_bundle_attach, 
+    };
+
     esp_http_client_handle_t client = esp_http_client_init(&config);
     if (client == NULL) {
         ESP_LOGE(TAG, "Failed to initialize HTTP client");
